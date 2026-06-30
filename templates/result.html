@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Result | Smart Lender</title>
+  <meta name="description" content="Your loan eligibility prediction result.">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="ledger-bg">
+
+  <!-- ============================== NAVBAR ============================== -->
+  <header class="navbar">
+    <div class="navbar__inner">
+      <a href="{{ url_for('index') }}" class="brand">
+        <span class="brand__mark"><i class="fa-solid fa-landmark"></i></span>
+        Smart Lender
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('index') }}#how-it-works">How it works</a>
+        <a href="{{ url_for('index') }}#features">Why Smart Lender</a>
+        <a href="{{ url_for('predict') }}" class="nav-cta">
+          <i class="fa-solid fa-file-signature"></i> Check Eligibility
+        </a>
+      </nav>
+
+      <button class="nav-toggle" aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="nav-drawer" aria-hidden="true">
+    <div class="nav-drawer__panel">
+      <button class="nav-drawer__close" aria-label="Close menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('index') }}#how-it-works">How it works</a>
+      <a href="{{ url_for('index') }}#features">Why Smart Lender</a>
+      <a href="{{ url_for('predict') }}">Check Eligibility</a>
+    </div>
+  </div>
+
+  <main class="result-page">
+    <div class="container">
+      <div class="result-shell">
+
+        {# ----------------------------------------------------------------
+           Expected context variables passed from Flask:
+           - prediction: "Y" or "N"  (or use is_approved: boolean)
+           - probability: float 0-100 (confidence/eligibility score, optional)
+           - applicant_name: string (optional)
+           - form data fields used in the summary table below
+        ---------------------------------------------------------------- #}
+        {% set is_approved = (prediction == 'Y') %}
+        {% set score = probability if probability is defined else (82 if is_approved else 34) %}
+
+        <div class="result-card {{ 'is-approved' if is_approved else 'is-rejected' }}">
+
+          <div class="gauge" data-percent="{{ score }}">
+            <svg width="180" height="180" viewBox="0 0 180 180">
+              <circle class="gauge__track" cx="90" cy="90" r="80"></circle>
+              <circle class="gauge__value" cx="90" cy="90" r="80"></circle>
+            </svg>
+            <div class="gauge__center">
+              <i class="fa-solid {{ 'fa-circle-check' if is_approved else 'fa-circle-xmark' }} gauge__icon"></i>
+              <span class="gauge__pct">{{ score }}%</span>
+            </div>
+          </div>
+
+          <span class="status-badge">
+            <i class="fa-solid {{ 'fa-check' if is_approved else 'fa-xmark' }}"></i>
+            {{ 'Loan Approved' if is_approved else 'Not Eligible' }}
+          </span>
+
+          <h2>
+            {% if is_approved %}
+              Good news{{ ', ' + applicant_name if applicant_name else '' }} — you're likely eligible.
+            {% else %}
+              {{ applicant_name + ', based' if applicant_name else 'Based' }} on your profile, this isn't a match yet.
+            {% endif %}
+          </h2>
+
+          <p class="result-message">
+            {% if is_approved %}
+              Our model predicts a strong chance of approval based on the details you
+              provided. This is an estimate to guide your next step, not a final loan offer.
+            {% else %}
+              Your current profile doesn't meet the typical approval pattern our model
+              has learned. Review the summary below — improving credit history or
+              adjusting the loan amount often changes the outcome.
+            {% endif %}
+          </p>
+
+          <div class="result-summary">
+            <div class="result-summary__title">Application Summary</div>
+            <div class="result-summary__grid">
+              <div class="result-summary__item"><span class="label">Gender</span><span class="value">{{ Gender|default('—') }}</span></div>
+              <div class="result-summary__item"><span class="label">Marital Status</span><span class="value">{{ Married|default('—') }}</span></div>
+              <div class="result-summary__item"><span class="label">Dependents</span><span class="value">{{ Dependents|default('—') }}</span></div>
+              <div class="result-summary__item"><span class="label">Education</span><span class="value">{{ Education|default('—') }}</span></div>
+              <div class="result-summary__item"><span class="label">Self Employed</span><span class="value">{{ Self_Employed|default('—') }}</span></div>
+              <div class="result-summary__item"><span class="label">Credit History</span><span class="value">{{ 'Good' if Credit_History == '1' else ('Poor' if Credit_History == '0' else '—') }}</span></div>
+              <div class="result-summary__item"><span class="label">Applicant Income</span><span class="value">${{ ApplicantIncome|default('—') }}</span></div>
+              <div class="result-summary__item"><span class="label">Co-applicant Income</span><span class="value">${{ CoapplicantIncome|default('—') }}</span></div>
+              <div class="result-summary__item"><span class="label">Loan Amount</span><span class="value">${{ LoanAmount|default('—') }}k</span></div>
+              <div class="result-summary__item"><span class="label">Loan Term</span><span class="value">{{ Loan_Amount_Term|default('—') }} mo</span></div>
+              <div class="result-summary__item"><span class="label">Property Area</span><span class="value">{{ Property_Area|default('—') }}</span></div>
+              <div class="result-summary__item"><span class="label">Prediction</span><span class="value">{{ 'Y' if is_approved else 'N' }}</span></div>
+            </div>
+          </div>
+
+          <div class="result-actions">
+            <a href="{{ url_for('predict') }}" class="btn btn--ghost btn--lg">
+              <i class="fa-solid fa-rotate-left"></i> Check Another Application
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn--primary btn--lg">
+              <i class="fa-solid fa-house"></i> Back to Home
+            </a>
+          </div>
+
+          <div class="result-note">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>This result is generated by a predictive model trained on historical
+            lending data. It's an estimate to help you plan and is not a final or
+            binding loan decision from any financial institution.</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================== FOOTER ============================== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span class="brand"><span class="brand__mark"><i class="fa-solid fa-landmark"></i></span> Smart Lender</span>
+      <nav class="footer__links" aria-label="Footer">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('predict') }}">Check Eligibility</a>
+      </nav>
+    </div>
+    <div class="container">
+      <small>&copy; 2026 Smart Lender. This tool provides an estimate only and is not a guarantee of loan approval.</small>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

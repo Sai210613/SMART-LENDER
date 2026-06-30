@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check Eligibility | Smart Lender</title>
+  <meta name="description" content="Fill in your details to get an instant loan eligibility prediction.">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="ledger-bg">
+
+  <!-- ============================== NAVBAR ============================== -->
+  <header class="navbar">
+    <div class="navbar__inner">
+      <a href="{{ url_for('index') }}" class="brand">
+        <span class="brand__mark"><i class="fa-solid fa-landmark"></i></span>
+        Smart Lender
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('index') }}#how-it-works">How it works</a>
+        <a href="{{ url_for('index') }}#features">Why Smart Lender</a>
+        <a href="{{ url_for('predict') }}" class="nav-cta is-active">
+          <i class="fa-solid fa-file-signature"></i> Check Eligibility
+        </a>
+      </nav>
+
+      <button class="nav-toggle" aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="nav-drawer" aria-hidden="true">
+    <div class="nav-drawer__panel">
+      <button class="nav-drawer__close" aria-label="Close menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('index') }}#how-it-works">How it works</a>
+      <a href="{{ url_for('index') }}#features">Why Smart Lender</a>
+      <a href="{{ url_for('predict') }}">Check Eligibility</a>
+    </div>
+  </div>
+
+  <main class="form-page">
+    <div class="container">
+
+      <div class="form-header">
+        <span class="eyebrow"><i class="fa-solid fa-lock"></i> Secure &amp; private</span>
+        <h1>Tell us about your application</h1>
+        <p>All fields marked required are needed to generate an accurate prediction.</p>
+      </div>
+
+      <!-- Section indicator, echoing the ledger motif from the landing page -->
+      <div class="form-progress">
+        <span class="form-progress__item is-active"><span class="dot"></span> Personal</span>
+        <span class="form-progress__item is-active"><span class="dot"></span> Employment</span>
+        <span class="form-progress__item is-active"><span class="dot"></span> Financial</span>
+        <span class="form-progress__item is-active"><span class="dot"></span> Loan</span>
+      </div>
+
+      {% if error %}
+      <div class="form-alert" role="alert">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>{{ error }}</span>
+      </div>
+      {% endif %}
+
+      <div class="form-shell">
+        <div class="form-shell__top"></div>
+
+        <form class="loan-form" action="{{ url_for('predict') }}" method="POST" novalidate>
+
+          <!-- ============================== 1. PERSONAL INFORMATION ============================== -->
+          <div class="form-section">
+            <h3 class="form-section__title"><i class="fa-solid fa-user"></i> Personal Information</h3>
+
+            <div class="form-grid">
+              <div class="field field--full">
+                <label for="applicant_name">Applicant Name</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-signature field-icon"></i>
+                  <input
+                    type="text"
+                    id="applicant_name"
+                    name="applicant_name"
+                    placeholder="e.g. Jane Doe"
+                    minlength="2"
+                    maxlength="100"
+                    pattern="[A-Za-z\s\.'-]+"
+                    title="Letters, spaces, apostrophes, hyphens and periods only"
+                    required
+                  >
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="age">Age <span class="optional">(years)</span></label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-cake-candles field-icon"></i>
+                  <input
+                    type="number"
+                    id="age"
+                    name="age"
+                    placeholder="e.g. 34"
+                    min="18"
+                    max="100"
+                    step="1"
+                    required
+                  >
+                </div>
+                <span class="hint">Must be between 18 and 100.</span>
+              </div>
+
+              <div class="field">
+                <label for="gender">Gender</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-venus-mars field-icon"></i>
+                  <select id="gender" name="gender" required>
+                    <option value="" disabled selected>Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="marital_status">Marital Status</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-ring field-icon"></i>
+                  <select id="marital_status" name="marital_status" required>
+                    <option value="" disabled selected>Select status</option>
+                    <option value="Married">Married</option>
+                    <option value="Single">Single</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="dependents">Dependents</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-people-roof field-icon"></i>
+                  <select id="dependents" name="dependents" required>
+                    <option value="" disabled selected>Number of dependents</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3+">3 or more</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="education">Education</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-graduation-cap field-icon"></i>
+                  <select id="education" name="education" required>
+                    <option value="" disabled selected>Select education level</option>
+                    <option value="Graduate">Graduate</option>
+                    <option value="Not Graduate">Not Graduate</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ledger-rule"></div>
+
+          <!-- ============================== 2. EMPLOYMENT DETAILS ============================== -->
+          <div class="form-section">
+            <h3 class="form-section__title"><i class="fa-solid fa-briefcase"></i> Employment Details</h3>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="employment_type">Employment Type</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-building-user field-icon"></i>
+                  <select id="employment_type" name="employment_type" required>
+                    <option value="" disabled selected>Select employment type</option>
+                    <option value="Salaried">Salaried</option>
+                    <option value="Self-Employed">Self-Employed</option>
+                    <option value="Business Owner">Business Owner</option>
+                    <option value="Unemployed">Unemployed</option>
+                    <option value="Retired">Retired</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="years_of_employment">Years of Employment</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-business-time field-icon"></i>
+                  <input
+                    type="number"
+                    id="years_of_employment"
+                    name="years_of_employment"
+                    placeholder="e.g. 7.5"
+                    min="0"
+                    max="50"
+                    step="0.1"
+                    required
+                  >
+                </div>
+                <span class="hint">Enter 0 if currently unemployed.</span>
+              </div>
+
+              <div class="field">
+                <label for="monthly_income">Monthly Income <span class="optional">($)</span></label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-wallet field-icon"></i>
+                  <input
+                    type="number"
+                    id="monthly_income"
+                    name="monthly_income"
+                    placeholder="e.g. 5849"
+                    min="0"
+                    step="0.01"
+                    required
+                  >
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="bank_balance">Bank Balance <span class="optional">($)</span></label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-building-columns field-icon"></i>
+                  <input
+                    type="number"
+                    id="bank_balance"
+                    name="bank_balance"
+                    placeholder="e.g. 250000"
+                    min="0"
+                    step="0.01"
+                    required
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ledger-rule"></div>
+
+          <!-- ============================== 3. FINANCIAL DETAILS ============================== -->
+          <div class="form-section">
+            <h3 class="form-section__title"><i class="fa-solid fa-sack-dollar"></i> Financial Details</h3>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="existing_emi">Existing EMI <span class="optional">(monthly, $)</span></label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-money-bill-wave field-icon"></i>
+                  <input
+                    type="number"
+                    id="existing_emi"
+                    name="existing_emi"
+                    placeholder="e.g. 12000"
+                    min="0"
+                    step="0.01"
+                    required
+                  >
+                </div>
+                <span class="hint">Enter 0 if you have no current EMIs.</span>
+              </div>
+
+              <div class="field">
+                <label for="existing_loan_amount">Existing Loan Amount <span class="optional">($)</span></label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-file-invoice-dollar field-icon"></i>
+                  <input
+                    type="number"
+                    id="existing_loan_amount"
+                    name="existing_loan_amount"
+                    placeholder="e.g. 150000"
+                    min="0"
+                    step="0.01"
+                    required
+                  >
+                </div>
+                <span class="hint">Enter 0 if you have no existing loans.</span>
+              </div>
+
+              <div class="field">
+                <label for="debt_to_income_ratio">Debt-to-Income Ratio <span class="optional">(%)</span></label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-scale-balanced field-icon"></i>
+                  <input
+                    type="number"
+                    id="debt_to_income_ratio"
+                    name="debt_to_income_ratio"
+                    placeholder="e.g. 35.25"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    required
+                  >
+                </div>
+                <span class="hint">Total monthly debt payments as a % of income.</span>
+              </div>
+
+              <div class="field">
+                <label for="credit_score">Credit Score</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-gauge-high field-icon"></i>
+                  <input
+                    type="number"
+                    id="credit_score"
+                    name="credit_score"
+                    placeholder="e.g. 745"
+                    min="300"
+                    max="900"
+                    step="1"
+                    required
+                  >
+                </div>
+                <span class="hint">Typical range: 300–900.</span>
+              </div>
+
+              <div class="field">
+                <label for="credit_history">Credit History</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-clipboard-check field-icon"></i>
+                  <select id="credit_history" name="credit_history" required>
+                    <option value="" disabled selected>Select credit history</option>
+                    <option value="1">Good (no past defaults)</option>
+                    <option value="0">Poor (past defaults)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="previous_defaults">Previous Loan Defaults</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-circle-exclamation field-icon"></i>
+                  <input
+                    type="number"
+                    id="previous_defaults"
+                    name="previous_defaults"
+                    placeholder="e.g. 0"
+                    min="0"
+                    max="50"
+                    step="1"
+                    required
+                  >
+                </div>
+                <span class="hint">Number of times you've defaulted on a loan.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ledger-rule"></div>
+
+          <!-- ============================== 4. LOAN DETAILS ============================== -->
+          <div class="form-section">
+            <h3 class="form-section__title"><i class="fa-solid fa-hand-holding-dollar"></i> Loan Details</h3>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="loan_amount_requested">Loan Amount Requested <span class="optional">($)</span></label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-coins field-icon"></i>
+                  <input
+                    type="number"
+                    id="loan_amount_requested"
+                    name="loan_amount_requested"
+                    placeholder="e.g. 500000"
+                    min="0"
+                    step="0.01"
+                    required
+                  >
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="loan_tenure">Loan Tenure <span class="optional">(months)</span></label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-calendar-days field-icon"></i>
+                  <select id="loan_tenure" name="loan_tenure" required>
+                    <option value="" disabled selected>Select tenure</option>
+                    <option value="12">12 months</option>
+                    <option value="24">24 months</option>
+                    <option value="36">36 months</option>
+                    <option value="60">60 months</option>
+                    <option value="120">120 months</option>
+                    <option value="180">180 months</option>
+                    <option value="240">240 months</option>
+                    <option value="300">300 months</option>
+                    <option value="360">360 months</option>
+                    <option value="480">480 months</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="loan_purpose">Loan Purpose</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-bullseye field-icon"></i>
+                  <select id="loan_purpose" name="loan_purpose" required>
+                    <option value="" disabled selected>Select loan purpose</option>
+                    <option value="Home">Home</option>
+                    <option value="Vehicle">Vehicle</option>
+                    <option value="Education">Education</option>
+                    <option value="Business">Business</option>
+                    <option value="Medical">Medical</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="collateral_value">Collateral Value <span class="optional">($)</span></label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-house-circle-check field-icon"></i>
+                  <input
+                    type="number"
+                    id="collateral_value"
+                    name="collateral_value"
+                    placeholder="e.g. 800000"
+                    min="0"
+                    step="0.01"
+                    required
+                  >
+                </div>
+                <span class="hint">Enter 0 if the loan is unsecured.</span>
+              </div>
+
+              <div class="field field--full">
+                <label for="property_area">Property Area</label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-map-location-dot field-icon"></i>
+                  <select id="property_area" name="property_area" required>
+                    <option value="" disabled selected>Select property area</option>
+                    <option value="Urban">Urban</option>
+                    <option value="Semiurban">Semiurban</option>
+                    <option value="Rural">Rural</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <p><i class="fa-solid fa-shield-halved"></i> Your information is used only to generate this prediction.</p>
+            <button type="submit" class="btn btn--primary btn--lg">
+              <span class="spinner"></span>
+              <span class="btn-label"><i class="fa-solid fa-paper-plane"></i> Get My Result</span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================== FOOTER ============================== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span class="brand"><span class="brand__mark"><i class="fa-solid fa-landmark"></i></span> Smart Lender</span>
+      <nav class="footer__links" aria-label="Footer">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('predict') }}">Check Eligibility</a>
+      </nav>
+    </div>
+    <div class="container">
+      <small>&copy; 2026 Smart Lender. This tool provides an estimate only and is not a guarantee of loan approval.</small>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

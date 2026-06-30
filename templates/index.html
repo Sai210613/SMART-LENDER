@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Lender | Loan Eligibility, Decided Instantly</title>
+  <meta name="description" content="Smart Lender uses machine learning to give you an instant, transparent loan eligibility decision.">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="ledger-bg">
+
+  <!-- ============================== NAVBAR ============================== -->
+  <header class="navbar">
+    <div class="navbar__inner">
+      <a href="{{ url_for('index') }}" class="brand">
+        <span class="brand__mark"><i class="fa-solid fa-landmark"></i></span>
+        Smart Lender
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="{{ url_for('index') }}" class="is-active">Home</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#features">Why Smart Lender</a>
+        <a href="{{ url_for('predict') }}" class="nav-cta">
+          <i class="fa-solid fa-file-signature"></i> Check Eligibility
+        </a>
+      </nav>
+
+      <button class="nav-toggle" aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile nav drawer -->
+  <div class="nav-drawer" aria-hidden="true">
+    <div class="nav-drawer__panel">
+      <button class="nav-drawer__close" aria-label="Close menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#features">Why Smart Lender</a>
+      <a href="{{ url_for('predict') }}">Check Eligibility</a>
+    </div>
+  </div>
+
+  <main>
+    <!-- ============================== HERO ============================== -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-bolt"></i> Decision in seconds</span>
+          <h1>Know your loan eligibility <span class="accent">before you apply</span>.</h1>
+          <p class="lede">
+            Smart Lender runs your financial profile through a trained prediction
+            model and gives you a clear, instant answer — no waiting rooms,
+            no guesswork, no hidden criteria.
+          </p>
+          <div class="hero__actions">
+            <a href="{{ url_for('predict') }}" class="btn btn--primary btn--lg">
+              <i class="fa-solid fa-file-signature"></i> Start Application
+            </a>
+            <a href="#how-it-works" class="btn btn--ghost btn--lg">
+              <i class="fa-solid fa-circle-play"></i> See how it works
+            </a>
+          </div>
+
+          <div class="hero__stats">
+            <div class="hero__stat">
+              <strong>60s</strong>
+              <span>Average decision time</span>
+            </div>
+            <div class="hero__stat">
+              <strong>12+</strong>
+              <span>Factors assessed</span>
+            </div>
+            <div class="hero__stat">
+              <strong>100%</strong>
+              <span>Free to check</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__visual" aria-hidden="true">
+          <div class="ledger-card ledger-card--back">
+            <div class="ledger-card__row"><span class="label">Applicant</span><span class="value">A. Reyes</span></div>
+            <div class="ledger-card__row"><span class="label">Loan Amount</span><span class="value">$18,400</span></div>
+            <div class="ledger-card__row"><span class="label">Term</span><span class="value">360 mo</span></div>
+          </div>
+          <div class="ledger-card ledger-card--front">
+            <div class="ledger-card__row"><span class="label">Credit History</span><span class="value">Good</span></div>
+            <div class="ledger-card__row"><span class="label">Property Area</span><span class="value">Urban</span></div>
+            <div class="ledger-card__row"><span class="label">Applicant Income</span><span class="value">$5,849</span></div>
+            <span class="ledger-card__status"><i class="fa-solid fa-circle-check"></i> Eligible</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="ledger-rule ledger-rule--accent"></div>
+    </div>
+
+    <!-- ============================== HOW IT WORKS ============================== -->
+    <section class="section" id="how-it-works">
+      <div class="container">
+        <div class="section__head">
+          <h2>Four steps to your answer</h2>
+          <p>From form to decision, the entire process happens in one sitting.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <span class="step__num">1</span>
+            <h4>Share your details</h4>
+            <p>Income, credit history, and loan request — one simple form.</p>
+          </div>
+          <div class="step">
+            <span class="step__num">2</span>
+            <h4>Model evaluates</h4>
+            <p>Our trained model scores your profile against historical lending data.</p>
+          </div>
+          <div class="step">
+            <span class="step__num">3</span>
+            <h4>Instant result</h4>
+            <p>See your eligibility outcome the moment you submit — no delay.</p>
+          </div>
+          <div class="step">
+            <span class="step__num">4</span>
+            <h4>Plan your next step</h4>
+            <p>Use the result to guide your real loan application with confidence.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== FEATURES ============================== -->
+    <section class="section" id="features" style="background:var(--color-white);">
+      <div class="container">
+        <div class="section__head">
+          <h2>Built for clarity, not guesswork</h2>
+          <p>Every part of Smart Lender is designed to make a financial decision feel transparent.</p>
+        </div>
+
+        <div class="cards-grid">
+          <div class="feature-card">
+            <span class="feature-card__icon"><i class="fa-solid fa-gauge-high"></i></span>
+            <h3>Instant Prediction</h3>
+            <p>Get an eligibility result in seconds, powered by a trained classification model.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-card__icon"><i class="fa-solid fa-shield-halved"></i></span>
+            <h3>Privacy First</h3>
+            <p>Your details are used only to generate your result — nothing is sold or shared.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-card__icon"><i class="fa-solid fa-chart-line"></i></span>
+            <h3>Data-Driven Accuracy</h3>
+            <p>Trained on real lending patterns across income, credit, and property factors.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-card__icon"><i class="fa-solid fa-mobile-screen"></i></span>
+            <h3>Works Everywhere</h3>
+            <p>A fully responsive experience on desktop, tablet, and mobile.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-card__icon"><i class="fa-solid fa-list-check"></i></span>
+            <h3>Clear Breakdown</h3>
+            <p>See exactly which details were used to reach your result.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-card__icon"><i class="fa-solid fa-rotate"></i></span>
+            <h3>Check Anytime</h3>
+            <p>Re-run your check whenever your income or credit profile changes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== CTA BAND ============================== -->
+    <section class="section">
+      <div class="container">
+        <div class="cta-band">
+          <div>
+            <h3>Ready to see where you stand?</h3>
+            <p>It takes less than a minute and costs you nothing.</p>
+          </div>
+          <a href="{{ url_for('predict') }}" class="btn btn--primary btn--lg">
+            <i class="fa-solid fa-arrow-right"></i> Check My Eligibility
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================== FOOTER ============================== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span class="brand"><span class="brand__mark"><i class="fa-solid fa-landmark"></i></span> Smart Lender</span>
+
+      <nav class="footer__links" aria-label="Footer">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('predict') }}">Check Eligibility</a>
+        <a href="#how-it-works">How it works</a>
+      </nav>
+
+      <div class="footer__social">
+        <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+      </div>
+    </div>
+    <div class="container">
+      <small>&copy; 2026 Smart Lender. This tool provides an estimate only and is not a guarantee of loan approval.</small>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
